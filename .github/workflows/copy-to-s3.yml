@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+      - main
+env:
+  BUCKET: <BUCKET_NAME>
+  REPO_PATH: backup/<BUCKET_PATH>
+jobs:
+  copy-to-s3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Copy to S3
+        run: |
+          aws s3 cp --recursive ./ s3://$BUCKET/$REPO_PATH/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: <REGION>
